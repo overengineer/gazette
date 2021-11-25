@@ -6,7 +6,6 @@ from model import Content
 from extract import *
 
 import json
-from bs4 import BeautifulSoup
 
 def get_all_posts():
     import os.path
@@ -30,8 +29,7 @@ def parse_content(post, raw):
         print("No text:", post, file=sys.stderr)
         return None
     with warn(Exception):
-        page = BeautifulSoup(raw, 'lxml')
-        article = extract_article(page)
+        article = extract_article(raw)
         if not article:
             print('No article: ', post, file=sys.stderr)
             article = ''

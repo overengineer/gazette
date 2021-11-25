@@ -5,6 +5,8 @@ except ImportError:
 else:
     re.set_fallback_notification(re.FALLBACK_WARNING)
 
+import sys
+
 newl = re.compile("(\n[ \t\|]*)+")
 space = re.compile("[ \t\|]+")
 
@@ -36,7 +38,7 @@ def extract_article2(page):
     output = space.sub(' ', output)
     return output.strip()
 
-def extract_article(page):
+def extract_article(raw):
     try:
         from trafilatura import extract
         config = {
@@ -46,7 +48,11 @@ def extract_article(page):
             "no_fallback": False,
             "favor_recall": True
         }
-        article = extract(page, **config)
+        article = extract(raw, **config)
         assert article
-    except:
+        return article
+    except Exception as ex:
+        print("extract_article", type(ex), ex, file=sys.stderr)
+        from bs4 import BeautifulSoup
+        page = BeautifulSoup(raw, 'lxml')
         return extract_article2(page)
