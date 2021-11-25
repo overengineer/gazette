@@ -10,7 +10,7 @@ Gathers posts from content feeds, filters, formats, delivers to you.
 ## TODO
 - [x] HackerNews
 - [x] Filters adapted from https://github.com/dmwarren/hackernews-filter
-- [] Other feeds
-- [] Mail Frontend
-- [] RSS Frontend
-- [] Web Frontend
+- [ ] Other feeds
+- [ ] Mail Frontend
+- [ ] RSS Frontend
+- [ ] Web Frontend
