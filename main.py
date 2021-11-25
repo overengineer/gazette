@@ -2,12 +2,11 @@
 
 from utils.misc import *
 from utils.request import *
-from model import Post, Content
+from model import Content
 from extract import *
 
 import json
 from bs4 import BeautifulSoup
-from munch import Munch
 
 def get_all_posts():
     import os.path
@@ -37,7 +36,7 @@ def parse_content(post, raw):
             print('No article: ', post, file=sys.stderr)
             article = ''
         density = len(article)/len(raw)
-        return Munch(post=post, article=article, density=density)
+        return Content(post=post, article=article, density=density)
 
 
 def fetch_content(posts):
@@ -49,8 +48,8 @@ def fetch_content(posts):
     yield from (parse_content(post, text) for post, text in zip(sync_posts, texts))
 
 def summary(content):
-    return Munch(
-        **content.post,
+    return Content(
+        post=content.post,
         article=content.article[:40]+"...",
         length=len(content.article),
         density=content.density

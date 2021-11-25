@@ -8,7 +8,6 @@ from bs4 import BeautifulSoup
 import cchardet
 from contextlib import suppress
 from urllib.parse import urlsplit, urljoin
-from munch import Munch
 
 base_url = "https://news.ycombinator.com"
 
@@ -34,7 +33,7 @@ def parse_post(entry, subtext):
     if link.startswith("item?id="):
         link = urljoin("https://news.ycombinator.com", link)
 
-    return Munch(
+    return Post(
         title=titlelink.string,
         link=link,
         score=int(score.string.split()[0]),

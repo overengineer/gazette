@@ -1,14 +1,14 @@
-from utils.misc import datetime_from_iso
+from munch import Munch
 
-from datetime import datetime
-from dataclasses import dataclass, asdict
-from typing import List, NamedTuple
-import json
+class Base(Munch):
+    def __init__(self, **kwargs):
+        for key, typ in self.__annotations__.items():
+            assert key in kwargs, f'missing field {key}'
+            val = kwargs[key]
+            assert isinstance(val, typ), f'field {key}:{val} is not instance of type {typ}'
+        super().__init__(**kwargs)
 
-class Base:
-    pass
-
-class Post(NamedTuple):
+class Post(Base):
     title: str
     link: str
     score: int
@@ -18,9 +18,9 @@ class Post(NamedTuple):
     comment_count: int
     source: str
 
-class Content(NamedTuple):
+class Content(Base):
     post: Post
     article: str
-    density: int
+    density: float
     # summary: str
     # keywords: List[str]
