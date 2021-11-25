@@ -1,7 +1,7 @@
 from utils.misc import *
 from contextlib import suppress
 
-
+# https://stackoverflow.com/a/63179518
 def async_aiohttp_get_all(urls, timeout=10, max_size=1000000, **kwargs):
     """
     performs asynchronous get requests
@@ -46,6 +46,7 @@ def sync_requests_get_all(urls, wait=1, timeout=10, **kwargs):
     for url in urls:
         text = b''
         with warn(Exception), suppress(requests.exceptions.ReadTimeout):
+            # https://thehftguy.com/2020/07/28/making-beautifulsoup-parsing-10-times-faster/
             response = session.get(url, timeout=timeout, verify=True, stream=True, **kwargs)
             response.raw.decode_content = True
             text = response.raw

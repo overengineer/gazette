@@ -1,5 +1,6 @@
 import sys, time, contextlib
 
+# https://stackoverflow.com/a/8290508
 def batches(iterable, n=1):
     l = len(iterable)
     for ndx in range(0,l,n):
@@ -17,9 +18,10 @@ def flatten(nested):
     for iterable in nested:
         yield from iterable
 
+# https://stackoverflow.com/a/46217079
 def partition(p, l):
     x = [], []
-    for n in l: x[int(bool(p(n)))].append(n)
+    for n in l: x[p(n)].append(n)
     return x
 
 @contextlib.contextmanager
@@ -29,6 +31,7 @@ def warn(*exceptions):
     except exceptions as ex:
         print(type(ex), ex, file=sys.stderr)
 
+# 
 def timed(func):
     """
     records approximate durations of function calls

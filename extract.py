@@ -8,6 +8,7 @@ else:
 newl = re.compile("(\n[ \t\|]*)+")
 space = re.compile("[ \t\|]+")
 
+# https://matix.io/extract-text-from-webpage-using-beautifulsoup-and-python/
 def extract_article2(page):
     text = page.find_all(text=True)
 
