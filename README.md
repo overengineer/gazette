@@ -5,7 +5,7 @@
 Gathers posts from content feeds, filters, formats, delivers to you.
 
 ## Usage
-`python main.py`
+`python3 main.py`
 
 ## TODO
 - [x] HackerNews
