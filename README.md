@@ -16,9 +16,9 @@ Gathers posts from content feeds, filters, formats, delivers to you.
 - [ ] Other feeds
   - [ ] Subreddits
   - [ ] RSS Feeds
-  - [ ] Stashdot.org
-  - [ ] Indiehackers.com
-  - [ ] Dev.to
+  - [ ] Slashdot.org
+  - [ ] Indiehackers.com?
+  - [ ] Dev.to?
 - [ ] Deduplication
 - [ ] Better filters
 - [ ] Better sorting
