@@ -13,8 +13,19 @@ Gathers posts from content feeds, filters, formats, delivers to you.
 - [x] Extract article
 - [ ] Keyword extraction
 - [ ] Summarization
-- [ ] Better filters
+
 - [ ] Other feeds
+  - [ ] Subreddits
+  - [ ] RSS Feeds
+  - [ ] Stashdot.org
+  - [ ] Indiehackers.com
+  - [ ] Dev.to
+
+- [ ] Deduplication
+- [ ] Better filters
+- [ ] Better sorting
+
+- [ ] Github Actions
 - [ ] Mail Frontend
 - [ ] RSS Frontend
 - [ ] Web Frontend
