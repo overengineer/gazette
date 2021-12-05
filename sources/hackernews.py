@@ -31,7 +31,7 @@ def parse_post(entry, subtext):
     
     link = titlelink.get("href")
     if link.startswith("item?id="):
-        link = urljoin("https://news.ycombinator.com", link)
+        link = urljoin(base_url, link)
 
     return Post(
         title=titlelink.string,
@@ -48,13 +48,13 @@ def parse_feed(content):
     page = BeautifulSoup(content, 'lxml')
     rows = page('table')[2].find_all('tr')[:-2]
     for entry, subtext, _ in batches(rows, 3):
-        with warn(Exception):
+        with warn(Exception, func='parse_feed'):
             yield parse_post(entry, subtext)
 
 def fetch_feed(n_pages=3):
     templ = "https://news.ycombinator.com/news?p={}"
     uris = (templ.format(page+1) for page in range(n_pages))
 
-    for content in async_aiohttp_get_all(uris):
-        with warn(Exception):
+    for content in sync_requests_get_all(uris):
+        with warn(Exception, func='fetch_feed'):
             yield from parse_feed(content)

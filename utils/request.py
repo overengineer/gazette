@@ -1,8 +1,11 @@
 from utils.misc import *
 from contextlib import suppress
 
+
+timeout = 60
+
 # https://stackoverflow.com/a/63179518
-def async_aiohttp_get_all(urls, timeout=10, max_size=1000000, **kwargs):
+def async_aiohttp_get_all(urls, timeout=timeout, max_size=1000000, **kwargs):
     """
     performs asynchronous get requests
     """
@@ -38,7 +41,7 @@ def async_aiohttp_get_all(urls, timeout=10, max_size=1000000, **kwargs):
     # call get_all as a sync function to be used in a sync context
     return sync.async_to_sync(get_all)(urls)
 
-def sync_requests_get_all(urls, wait=1, timeout=10, **kwargs):
+def sync_requests_get_all(urls, wait=1, timeout=timeout, **kwargs):
     import requests
     import cchardet
     import time

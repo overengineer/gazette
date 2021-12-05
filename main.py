@@ -14,8 +14,9 @@ def get_all_posts():
 
     package_dir = os.path.abspath(os.path.join(__file__, "../sources"))
     for (_, module_name, _) in iter_modules([package_dir]):
-        module = import_module(f"sources.{module_name}")
-        yield from module.fetch_feed()
+        with warn(Exception, func='get_all_posts'):
+            module = import_module(f"sources.{module_name}")
+            yield from module.fetch_feed()
 
 # def get_posts():
 #     import multiprocessing

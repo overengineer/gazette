@@ -1,4 +1,5 @@
 from munch import Munch
+from typing import List
 
 class Base(Munch):
     def __init__(self, **kwargs):
@@ -17,6 +18,7 @@ class Post(Base):
     comments: str
     comment_count: int
     source: str
+    tags: List[str] = []
 
 class Content(Base):
     post: Post
