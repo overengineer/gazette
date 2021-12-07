@@ -2,8 +2,9 @@
 
 from utils.misc import *
 from utils.request import *
-from model import Content
+from model import Content, JsonEncoder
 from extract import *
+from filters import *
 
 import json
 
@@ -26,16 +27,16 @@ def get_all_posts():
 
 
 def parse_content(post, raw):
-    if not raw:
-        print("No text:", post, file=sys.stderr)
+    if not filter_raw(post, raw):
         return None
     with warn(Exception):
         article = extract_article(raw)
         if not article:
             print('No article: ', post, file=sys.stderr)
             article = ''
-        density = len(article)/len(raw)
-        return Content(post=post, article=article, density=density)
+        length = len(article)
+        density = length/len(raw)
+        return Content(post=post, article=article, density=density, length=length)
 
 
 def fetch_content(posts):
@@ -58,7 +59,6 @@ def summary(content):
 
 @timed
 def main():
-    from filters import filter_metadata,filter_content
     from pprint import pprint
     import sys
     
@@ -67,7 +67,7 @@ def main():
     filtered_posts = list(filter(filter_metadata, posts))
     contents = list(fetch_content(filtered_posts))
     filtered_contents = list(filter(filter_content, contents))
-    print(json.dumps(list(summary(content) for content in filtered_contents), indent=4))
+    print(json.dumps(list(summary(content) for content in filtered_contents), indent=4, cls=JsonEncoder))
     print(f'{len(filtered_contents)}/{len(contents)}/{len(filtered_posts)}/{len(posts)}/{len(all_posts)}', file=sys.stderr)
 
 if __name__=="__main__":

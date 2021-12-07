@@ -38,7 +38,7 @@ def parse_post(entry, subtext):
         link=link,
         score=int(score.string.split()[0]),
         user=f'https://news.ycombinator.com/user?id={user.string}',
-        date=age.get("title"),
+        date=datetime.strptime(age.get("title"), r"%Y-%m-%dT%H:%M:%S"),
         comments=f'https://news.ycombinator.com/{comments.get("href")}',
         comment_count=comment_count,
         source=base_url
@@ -55,6 +55,6 @@ def fetch_feed(n_pages=3):
     templ = "https://news.ycombinator.com/news?p={}"
     uris = (templ.format(page+1) for page in range(n_pages))
 
-    for content in sync_requests_get_all(uris):
+    for content in async_aiohttp_get_all(uris):
         with warn(Exception, func='fetch_feed'):
             yield from parse_feed(content)

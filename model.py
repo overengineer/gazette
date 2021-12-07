@@ -1,5 +1,14 @@
 from munch import Munch
 from typing import List
+from datetime import datetime
+import json
+
+class JsonEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, datetime):
+            return o.isoformat()
+
+        return json.JSONEncoder.default(self, o)
 
 class Base(Munch):
     def __init__(self, **kwargs):
@@ -14,15 +23,15 @@ class Post(Base):
     link: str
     score: int
     user: str
-    date: str
+    date: datetime
     comments: str
     comment_count: int
     source: str
-    tags: List[str] = []
 
 class Content(Base):
     post: Post
     article: str
     density: float
+    length: int
     # summary: str
     # keywords: List[str]
