@@ -25,11 +25,11 @@ def partition(p, l):
     return x
 
 @contextlib.contextmanager
-def warn(*exceptions):
+def warn(*exceptions, func=''):
     try:
         yield
     except exceptions as ex:
-        print(type(ex), ex, file=sys.stderr)
+        print(func, type(ex), ex, file=sys.stderr)
 
 # 
 def timed(func):
@@ -38,7 +38,6 @@ def timed(func):
     """
     def wrapper(*args, **kwargs):
         start = time.time()
-        print('{name:<30} started'.format(name=func.__name__), file=sys.stderr)
         result = func(*args, **kwargs)
         duration = "{name:<30} finished in {elapsed:.2f} seconds".format(
             name=func.__name__, elapsed=time.time() - start
