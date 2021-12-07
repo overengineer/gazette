@@ -3,13 +3,14 @@ from contextlib import suppress
 
 
 timeout = 60
+import asyncio
+asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 # https://stackoverflow.com/a/63179518
 def async_aiohttp_get_all(urls, timeout=timeout, max_size=1000000, **kwargs):
     """
     performs asynchronous get requests
     """
-    import asyncio
     from aiohttp import ClientSession, ClientTimeout
     from asgiref import sync
 
