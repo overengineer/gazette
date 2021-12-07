@@ -1,12 +1,14 @@
 from utils.misc import *
 from contextlib import suppress
 
+import asyncio
+asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
 # https://stackoverflow.com/a/63179518
 def async_aiohttp_get_all(urls, timeout=10, max_size=1000000, **kwargs):
     """
     performs asynchronous get requests
     """
-    import asyncio
     from aiohttp import ClientSession, ClientTimeout
     from asgiref import sync
 
