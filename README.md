@@ -9,7 +9,7 @@ Gathers posts from content feeds, filters, formats, delivers to you.
 
 ## TODO
 - [x] HackerNews
-- [x] Lobsters (Use their RSS feed instead) 
+- [x] Lobsters
 - [x] Filters adapted from https://github.com/dmwarren/hackernews-filter
 - [x] Extract article
 - [ ] Keyword extraction
