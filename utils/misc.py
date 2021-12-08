@@ -33,7 +33,7 @@ def warn(*exceptions, func=''):
 
 # https://www.flipcode.com/archives/Fast_Approximate_Distance_Functions.shtml
 def approx_distance(*args):
-    return min(*args) + max(*args)
+    return 0.43*min(*args) + max(*args)
 
 # 
 def timed(func):
