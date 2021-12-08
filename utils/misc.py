@@ -31,6 +31,10 @@ def warn(*exceptions, func=''):
     except exceptions as ex:
         print(func, type(ex), ex, file=sys.stderr)
 
+# https://www.flipcode.com/archives/Fast_Approximate_Distance_Functions.shtml
+def approx_distance(*args):
+    return min(*args) + max(*args)
+
 # 
 def timed(func):
     """
@@ -48,3 +52,7 @@ def timed(func):
     return wrapper
 
 timed.durations = []
+
+
+from datetime import datetime, timezone
+LOCAL_TIMEZONE = datetime.now(timezone.utc).astimezone().tzinfo

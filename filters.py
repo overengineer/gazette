@@ -33,6 +33,4 @@ def filter_raw(post, raw):
     return post and raw and 500000 >= len(raw) >= 1000
     
 def filter_content(content):
-    n = 10
-    limit = 1000
-    return content and 100000 >= content.length >= 100 and content.density > 0.05 and filter_pattern.subn('', content.article[:limit], n)[1] < n
+    return content and 100000 >= content.length >= 100 and content.density > 0.05 and content.filter_score < 10
