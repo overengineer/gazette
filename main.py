@@ -85,8 +85,8 @@ def main():
     filtered_contents = list(filter(filter_content, contents))
     filtered_contents.sort(key=lambda content: approx_distance(content.filter_score, 100*(1-content.density)))
     top_contents = filtered_contents[:10]
-    print(json.dumps(list(summary(content) for content in top_contents), indent=4, cls=JsonEncoder))
-    print(f'{len(top_contents)}/{len(contents)}/{len(filtered_posts)}/{len(posts)}/{len(all_posts)}', file=sys.stderr)
+    print(json.dumps(list(summary(content) for content in top_contents), indent=4, cls=JsonEncoder, ensure_ascii=False))
+    print(f'{len(top_contents)}/{len(filtered_contents)}/{len(contents)}/{len(filtered_posts)}/{len(posts)}/{len(all_posts)}', file=sys.stderr)
 
 if __name__=="__main__":
     main()
