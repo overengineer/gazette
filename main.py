@@ -6,7 +6,7 @@ from model import Content, JsonEncoder
 from extract import *
 from filters import *
 
-import json
+import json, itertools
 
 def get_all_posts():
     import os.path
@@ -14,10 +14,18 @@ def get_all_posts():
     from importlib import import_module
 
     package_dir = os.path.abspath(os.path.join(__file__, "../sources"))
-    for (_, module_name, _) in iter_modules([package_dir]):
-        with warn(Exception, func='get_all_posts'):
-            module = import_module(f"sources.{module_name}")
-            yield from module.fetch_feed()
+    def get_feeds_by_module():
+        for (_, module_name, _) in iter_modules([package_dir]):
+            with warn(Exception, func=module_name):
+                module = import_module(f"sources.{module_name}")
+                for url in module.get_feed():
+                    yield module, url
+    modules, feed_urls = zip(*get_feeds_by_module())
+    contents = async_aiohttp_get_all(feed_urls)
+    for module, content in zip(modules, contents):
+        if content:
+            yield from module.parse_feed(content)
+    
 
 # def get_posts():
 #     import multiprocessing
@@ -36,7 +44,9 @@ def parse_content(post, raw):
             article = ''
         length = len(article)
         density = length/len(raw)
-        return Content(post=post, article=article, density=density, length=length)
+        limit = 1000
+        filter_score=filter_pattern.subn('', article[:limit], 20)[1]
+        return Content(post=post, article=article, density=density, length=length, filter_score=filter_score)
 
 
 def fetch_content(posts):
@@ -52,7 +62,8 @@ def summary(content):
         post=content.post,
         article=content.article[:40]+"...",
         length=len(content.article),
-        density=content.density
+        density=content.density,
+        filter_score=content.filter_score
     )
 
 # TODO: filter by comments - OR relation
@@ -60,15 +71,22 @@ def summary(content):
 @timed
 def main():
     from pprint import pprint
-    import sys
-    
+    import sys, operator
+    from datetime import datetime, timezone
+
+    max_posts = 100
+    now = datetime.now(None)
+
     all_posts = list(get_all_posts())
     posts = list(filter(None, all_posts))
     filtered_posts = list(filter(filter_metadata, posts))
-    contents = list(fetch_content(filtered_posts))
+    filtered_posts.sort(key=lambda post: post.score, reverse=True)
+    contents = list(fetch_content(filtered_posts[:50]))
     filtered_contents = list(filter(filter_content, contents))
-    print(json.dumps(list(summary(content) for content in filtered_contents), indent=4, cls=JsonEncoder))
-    print(f'{len(filtered_contents)}/{len(contents)}/{len(filtered_posts)}/{len(posts)}/{len(all_posts)}', file=sys.stderr)
+    filtered_contents.sort(key=lambda content: content.density, reverse=True)
+    top_contents = filtered_contents[:10]
+    print(json.dumps(list(summary(content) for content in top_contents), indent=4, cls=JsonEncoder, ensure_ascii=False))
+    print(f'{len(top_contents)}/{len(filtered_contents)}/{len(contents)}/{len(filtered_posts)}/{len(posts)}/{len(all_posts)}', file=sys.stderr)
 
 if __name__=="__main__":
     main()

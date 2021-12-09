@@ -34,12 +34,14 @@ def parse_post(story):
     if link.startswith("/"):
         link = urljoin(base_url, link)
 
+    date = datetime.strptime(date, r"%Y-%m-%d %H:%M:%S %z")
+
     return Post(
         title=title,
         link=link,
         score=score,
         user=author,
-        date=datetime.strptime(date, r"%Y-%m-%d %H:%M:%S %z"),
+        date=date,
         comments=comments,
         comment_count=comment_count,
         source=base_url,
@@ -50,13 +52,9 @@ def parse_feed(content):
     page = BeautifulSoup(content, 'lxml')
     stories = page('ol')[0].find_all('li')
     for story in stories:
-        with warn(Exception, func='parse_feed'):
-            yield parse_post(story)
+        yield parse_post(story)
 
-def fetch_feed(n_pages=3):
+def get_feed(n_pages=3):
     templ = "https://lobste.rs/page/{}"
-    uris = (templ.format(page+1) for page in range(n_pages))
-
-    for content in async_aiohttp_get_all(uris):
-        with warn(Exception, func='fetch_feed'):
-            yield from parse_feed(content)
+    for page in range(n_pages):
+        yield templ.format(page+1)
