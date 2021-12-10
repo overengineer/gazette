@@ -13,11 +13,11 @@ def get_all_posts():
     from pkgutil import iter_modules
     from importlib import import_module
 
-    package_dir = os.path.abspath(os.path.join(__file__, "../sources"))
+    package_dir = os.path.abspath(os.path.join(__file__, "../feeds"))
     def get_feeds_by_module():
         for (_, module_name, _) in iter_modules([package_dir]):
             with warn(Exception, func=module_name):
-                module = import_module(f"sources.{module_name}")
+                module = import_module(f"feeds.{module_name}")
                 for url in module.get_feed():
                     yield module, url
     modules, feed_urls = zip(*get_feeds_by_module())

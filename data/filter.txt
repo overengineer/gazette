@@ -210,3 +210,4 @@
 
 .*(corona|covid|vaccin|lockdown|antivax|antimask|quarantine|pandemi).*
 .*tiktok.*
+.*web3.*
