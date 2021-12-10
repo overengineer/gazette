@@ -73,6 +73,7 @@ def main():
     from pprint import pprint
     import sys, operator
     from datetime import datetime, timezone
+    import filters
 
     max_posts = 100
     now = datetime.now(None)
@@ -83,7 +84,7 @@ def main():
     filtered_posts.sort(key=lambda post: post.score, reverse=True)
     contents = list(fetch_content(filtered_posts[:50]))
     filtered_contents = list(filter(filter_content, contents))
-    filtered_contents.sort(key=lambda content: content.density, reverse=True)
+    filtered_contents.sort(key=lambda content: content.density - (content.filter_score/filters.max_filter_score), reverse=True)
     top_contents = filtered_contents[:10]
     print(json.dumps(list(summary(content) for content in top_contents), indent=4, cls=JsonEncoder, ensure_ascii=False))
     print(f'{len(top_contents)}/{len(filtered_contents)}/{len(contents)}/{len(filtered_posts)}/{len(posts)}/{len(all_posts)}', file=sys.stderr)

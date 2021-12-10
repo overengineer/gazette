@@ -31,6 +31,9 @@ def filter_metadata(post):
 
 def filter_raw(post, raw):
     return post and raw and 500000 >= len(raw) >= 1000
-    
+
+max_filter_score = 10
+
 def filter_content(content):
-    return content and 100000 >= content.length >= 100 and content.density > 0.05 and content.filter_score < 10
+    return content and 100000 >= content.length >= 100 and content.density > 0.05 and content.filter_score < max_filter_score
+
