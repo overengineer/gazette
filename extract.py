@@ -10,8 +10,11 @@ import sys
 newl = re.compile("(\n[ \t\|]*)+")
 space = re.compile("[ \t\|]+")
 
+from bs4 import BeautifulSoup
+
 # https://matix.io/extract-text-from-webpage-using-beautifulsoup-and-python/
-def extract_article2(page):
+def extract_article2(raw):
+    page = BeautifulSoup(raw, 'lxml')
     text = page.find_all(text=True)
 
     output = ''
@@ -38,7 +41,9 @@ def extract_article2(page):
     output = space.sub(' ', output)
     return output.strip()
 
-def extract_article(raw):
+def extract_article(post, raw):
+    if post.link.startswith(post.source):
+        return extract_article2(raw)
     try:
         from trafilatura import extract
         config = {
@@ -53,6 +58,4 @@ def extract_article(raw):
         return article
     except Exception as ex:
         print("extract_article", type(ex), ex, file=sys.stderr)
-        from bs4 import BeautifulSoup
-        page = BeautifulSoup(raw, 'lxml')
-        return extract_article2(page)
+        return extract_article2(raw)

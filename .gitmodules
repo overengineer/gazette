@@ -1,0 +1,3 @@
+[submodule "assets/ublock"]
+	path = assets/ublock
+	url = https://github.com/uBlockOrigin/uAssets.git

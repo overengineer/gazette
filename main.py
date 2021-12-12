@@ -7,6 +7,7 @@ from extract import *
 from filters import *
 
 import json, itertools
+from urllib.parse import urljoin
 
 def get_all_posts():
     import os.path
@@ -34,28 +35,38 @@ def get_all_posts():
 #     return flatten(json.loads(obj) for obj in pool.map(task, modules()))
 
 
-def parse_content(post, raw):
+def parse_content(args):
+    post, raw = args
     if not filter_raw(post, raw):
         return None
     with warn(Exception):
-        article = extract_article(raw)
+        article = extract_article(post, raw)
         if not article:
             print('No article: ', post, file=sys.stderr)
             article = ''
         length = len(article)
         density = length/len(raw)
         limit = 1000
-        filter_score=filter_pattern.subn('', article[:limit], 20)[1]
-        return Content(post=post, article=article, density=density, length=length, filter_score=filter_score)
+        raw = str(raw)
+        filter_score=filter_pattern.subn('', article[:limit], 20)[1] + adblock_score(raw)
+        return Content(post=post, raw=raw, article=article, density=density, length=length, filter_score=filter_score)
 
+def normalize_url(post):
+    if not post.link.startswith("http"):
+        if post.link.startswith('/'):
+            post.link = urljoin(post.source, post.link)
+        else:
+            post.link = 'https://' + post.link
+    return post
 
 def fetch_content(posts):
-    pred = lambda post: post.link and post.link.startswith("https:/news.ycombinator.com")
+    posts = map(normalize_url, posts)
+    pred = lambda post: post.link and post.link.startswith(post.source)
     async_posts, sync_posts = partition(pred, posts)
     texts = async_aiohttp_get_all(post.link for post in async_posts)
-    yield from (parse_content(post, text) for post, text in zip(async_posts, texts))
+    yield from map(parse_content, zip(async_posts, texts))
     texts = sync_requests_get_all(post.link for post in sync_posts)
-    yield from (parse_content(post, text) for post, text in zip(sync_posts, texts))
+    yield from map(parse_content, zip(sync_posts, texts))
 
 def summary(content):
     return Content(
@@ -80,13 +91,18 @@ def main():
 
     all_posts = list(get_all_posts())
     posts = list(filter(None, all_posts))
+    # for content in fetch_content(posts):
+    #     print(summary(content))
+    # exit()
     filtered_posts = list(filter(filter_metadata, posts))
-    filtered_posts.sort(key=lambda post: post.score, reverse=True)
+    filtered_posts.sort(key=lambda post: post.score + post.comment_count, reverse=True)
     contents = list(fetch_content(filtered_posts[:50]))
     filtered_contents = list(filter(filter_content, contents))
-    filtered_contents.sort(key=lambda content: content.density - (content.filter_score/filters.max_filter_score), reverse=True)
+    coeff = 1/(filters.max_filter_score + filters.max_adblock_score)
+    pred = lambda content: 100 * approx_distance(2*content.density, (1-coeff*content.filter_score)) + content.post.score + content.post.comment_count
+    filtered_contents.sort(key=pred, reverse=True)
     top_contents = filtered_contents[:10]
-    print(json.dumps(list(summary(content) for content in top_contents), indent=4, cls=JsonEncoder, ensure_ascii=False))
+    print(json.dumps(list(map(summary, top_contents)), indent=4, cls=JsonEncoder, ensure_ascii=False))
     print(f'{len(top_contents)}/{len(filtered_contents)}/{len(contents)}/{len(filtered_posts)}/{len(posts)}/{len(all_posts)}', file=sys.stderr)
 
 if __name__=="__main__":
