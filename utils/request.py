@@ -4,7 +4,11 @@ from contextlib import suppress
 
 timeout = 60
 import asyncio
-asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
+import platform
+
+if platform.system == "Windows":
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 # https://stackoverflow.com/a/63179518
 def async_aiohttp_get_all(urls, timeout=timeout, max_size=1000000, **kwargs):
