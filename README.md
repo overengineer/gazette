@@ -11,7 +11,7 @@ Gathers posts from content feeds, filters, formats, delivers to you.
 - [x] HackerNews
 - [x] Lobsters
 - [x] Filters adapted from https://github.com/dmwarren/hackernews-filter
-- [ ] Adblock filters
+- [x] Adblock filters
 - [x] Extract article
 - [ ] Keyword extraction
 - [ ] Summarization
