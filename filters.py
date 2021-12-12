@@ -19,7 +19,7 @@ def read_filter_file(filter_path):
                 continue
             yield line
 
-def get_filter_pattern(filter_path="data/filter.txt"):
+def get_filter_pattern(filter_path="assets/filter.txt"):
     patterns = read_filter_file(filter_path)
     combined = "(" + ")|(".join(patterns) + ")"
     return re.compile(combined)
