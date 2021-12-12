@@ -21,9 +21,9 @@ Gathers posts from content feeds, filters, formats, delivers to you.
   - [ ] Slashdot.org
   - [ ] Indiehackers.com?
   - [ ] Dev.to?
-- [ ] Deduplication
-- [ ] Better filters
-- [ ] Better sorting
+- [x] Deduplication
+- [x] Better filters
+- [x] Better sorting
 - [ ] Github Actions
 - [ ] Mail Frontend
 - [ ] RSS Frontend

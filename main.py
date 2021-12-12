@@ -79,6 +79,12 @@ def summary(content):
 
 # TODO: filter by comments - OR relation
 
+def deduplicate(posts):
+    d = {}
+    for post in reversed(posts):
+        d[post.link] = post
+    return list(d.values())
+
 @timed
 def main():
     from pprint import pprint
@@ -90,7 +96,7 @@ def main():
     now = datetime.now(None)
 
     all_posts = list(get_all_posts())
-    posts = list(filter(None, all_posts))
+    posts = deduplicate(list(filter(None, all_posts)))
     # for content in fetch_content(posts):
     #     print(summary(content))
     # exit()

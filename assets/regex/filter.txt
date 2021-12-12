@@ -44,7 +44,7 @@
 
 # "You know, before Twitter, we used to keep all these thoughts
 #  to ourselves." -- Letterman
-(?i).*(facebook|twitter|tweet).*
+(?i).*(facebook|twitter|tweet|amazon|instagram|apple|netflix).*
 
 # Any game produced after 1993 is not worth playing
 (?i).*(steam|valve).*
@@ -208,6 +208,6 @@
 .*spectrum.ieee.org.*
 
 
-.*(corona|covid|vaccin|lockdown|antivax|antimask|quarantine|pandemi).*
-.*tiktok.*
-.*web3.*
+(?i).*(corona|covid|vaccin|lockdown|antivax|antimask|quarantine|pandemi).*
+(?i).*tiktok.*
+(?i).*web3.*
