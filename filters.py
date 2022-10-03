@@ -35,6 +35,7 @@ def filter_raw(post, raw):
 max_filter_score = 10
 
 def filter_content(content):
+    print(bool(content), content.length, content.density, content.filter_score)
     return content and 100000 >= content.length >= 100 and content.density > 0.05 and content.filter_score < max_filter_score
 
 

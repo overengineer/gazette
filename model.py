@@ -28,16 +28,6 @@ class Post(Base):
     comment_count: int
     source: str
 
-class DefaultPost(Munch):
-    title: str = 'default'
-    link: str = 'default'
-    score: int = 20
-    user: str = 'default'
-    date: datetime = datetime.now()
-    comments: str = 'default'
-    comment_count: int = 20
-    source: str = 'default'
-
 class Content(Base):
     post: Post
     article: str

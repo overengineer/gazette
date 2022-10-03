@@ -25,8 +25,7 @@ def get_all_posts():
     modules, feed_urls = zip(*get_feeds_by_module())
     contents = async_aiohttp_get_all(feed_urls, ssl=False)
     for module, content in zip(modules, contents):
-        if content: 
-            print(module)
+        if content:
             yield from module.parse_feed(content)
     
 

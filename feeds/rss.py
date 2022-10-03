@@ -9,7 +9,17 @@ def parse_feed(content):
         return
     feed = feedparser.parse(content)
     for entry in feed.entries:
-        yield Post(**entry)
+        kwargs = dict()
+        kwargs['title'] = 'default'
+        kwargs['link'] = 'default'
+        kwargs['score'] = 20
+        kwargs['user'] = 'default'
+        kwargs['date'] = datetime.now()
+        kwargs['comments'] = 'default'
+        kwargs['comment_count'] = 20
+        kwargs['source'] = 'default'
+        kwargs |= entry
+        yield Post(**kwargs)
 
 def get_feed():
     with open('assets/rss/feeds.txt') as fd:
