@@ -17,14 +17,16 @@ def get_all_posts():
     package_dir = os.path.abspath(os.path.join(__file__, "../feeds"))
     def get_feeds_by_module():
         for (_, module_name, _) in iter_modules([package_dir]):
-            with warn(Exception, func=module_name):
+            with warn(Exception, func=module_name, msg=__name__):
                 module = import_module(f"feeds.{module_name}")
                 for url in module.get_feed():
+                    print(module, url)
                     yield module, url
     modules, feed_urls = zip(*get_feeds_by_module())
-    contents = async_aiohttp_get_all(feed_urls)
+    contents = async_aiohttp_get_all(feed_urls, ssl=False)
     for module, content in zip(modules, contents):
-        if content:
+        if content: 
+            print(module)
             yield from module.parse_feed(content)
     
 
@@ -39,7 +41,7 @@ def parse_content(args):
     post, raw = args
     if not filter_raw(post, raw):
         return None
-    with warn(Exception):
+    with warn(Exception, msg=__name__):
         article = extract_article(post, raw)
         if not article:
             print('No article: ', post, file=sys.stderr)
@@ -107,7 +109,7 @@ def main():
     coeff = 1/(filters.max_filter_score + filters.max_adblock_score)
     pred = lambda content: 100 * approx_distance(2*content.density, (1-coeff*content.filter_score)) + content.post.score + content.post.comment_count
     filtered_contents.sort(key=pred, reverse=True)
-    top_contents = filtered_contents[:10]
+    top_contents = filtered_contents[:max_posts]
     print(json.dumps(list(map(summary, top_contents)), indent=4, cls=JsonEncoder, ensure_ascii=False))
     print(f'{len(top_contents)}/{len(filtered_contents)}/{len(contents)}/{len(filtered_posts)}/{len(posts)}/{len(all_posts)}', file=sys.stderr)
 

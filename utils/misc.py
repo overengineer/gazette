@@ -25,11 +25,11 @@ def partition(p, l):
     return x
 
 @contextlib.contextmanager
-def warn(*exceptions, func=''):
+def warn(*exceptions, func='', msg=''):
     try:
         yield
     except exceptions as ex:
-        print(func, type(ex), ex, file=sys.stderr)
+        print(msg, func, type(ex), ex, file=sys.stderr)
 
 # https://www.flipcode.com/archives/Fast_Approximate_Distance_Functions.shtml
 def approx_distance(*args):

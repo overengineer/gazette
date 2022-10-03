@@ -1,5 +1,6 @@
 from utils.misc import *
 from contextlib import suppress
+import sys
 
 
 timeout = 60
@@ -7,8 +8,11 @@ import asyncio
 
 import platform
 
-if platform.system == "Windows":
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+if (sys.platform.startswith('win')
+        and sys.version_info[0] == 3
+        and sys.version_info[1] >= 8):
+    policy = asyncio.WindowsSelectorEventLoopPolicy()
+    asyncio.set_event_loop_policy(policy)
 
 # https://stackoverflow.com/a/63179518
 def async_aiohttp_get_all(urls, timeout=timeout, max_size=1000000, **kwargs):
@@ -20,10 +24,10 @@ def async_aiohttp_get_all(urls, timeout=timeout, max_size=1000000, **kwargs):
 
     async def get_all(urls):
         client_timeout = ClientTimeout(total=None, sock_connect=timeout, sock_read=timeout)
-        async with ClientSession(timeout=client_timeout) as session:
+        async with ClientSession(timeout=client_timeout, trust_env=True) as session:
             async def fetch(url):
                 text = b''
-                with warn(Exception), warn(asyncio.TimeoutError):
+                with warn(Exception, asyncio.TimeoutError, msg=__name__):
                     async with session.get(url, **kwargs) as response:
                         length = response.headers.get('Content-Length')
                         if length and int(length) > max_size:
@@ -53,7 +57,7 @@ def sync_requests_get_all(urls, wait=1, timeout=timeout, **kwargs):
     session = requests.Session()
     for url in urls:
         text = b''
-        with warn(Exception), suppress(requests.exceptions.ReadTimeout):
+        with warn(Exception, msg=__name__), suppress(requests.exceptions.ReadTimeout):
             # https://thehftguy.com/2020/07/28/making-beautifulsoup-parsing-10-times-faster/
             response = session.get(url, timeout=timeout, verify=True, **kwargs)
             #response.raw.decode_content = True
