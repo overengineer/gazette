@@ -27,7 +27,7 @@ def get_filter_pattern(filter_path="assets/regex/filter.txt"):
 filter_pattern = get_filter_pattern()
 
 def filter_metadata(post):
-    return post and post.link and post.title and post.comment_count >= 2 and post.score >= 5 and not filter_pattern.match(post.link + '\n' + post.title)
+    return post and post.link and post.title and (post.comment_count < 0 or post.comment_count >= 2) and (post.score < 0 or post.score >= 5) and not filter_pattern.match(post.link + '\n' + post.title)
 
 def filter_raw(post, raw):
     return post and raw and type(raw) in (str, bytes) and 500000 >= len(raw) >= 1000
@@ -35,7 +35,6 @@ def filter_raw(post, raw):
 max_filter_score = 10
 
 def filter_content(content):
-    print(bool(content), content.length, content.density, content.filter_score)
     return content and 100000 >= content.length >= 100 and content.density > 0.05 and content.filter_score < max_filter_score
 
 

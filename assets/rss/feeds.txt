@@ -2,3 +2,12 @@
 # This is a test
 
 http://rss.slashdot.org/Slashdot/slashdotMain
+https://dev.to/rss
+http://feeds.arstechnica.com/arstechnica/technology-lab
+https://feeds.feedburner.com/oreilly/radar/atom
+
+https://antonz.org/index.xml
+https://blog.royalsloth.eu/posts/index.xml
+https://programmingisterrible.com/rss
+https://jvns.ca/atom.xml
+https://lethain.com/feeds.xml

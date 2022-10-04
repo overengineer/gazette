@@ -102,8 +102,12 @@ def main():
     #     print(summary(content))
     # exit()
     filtered_posts = list(filter(filter_metadata, posts))
-    filtered_posts.sort(key=lambda post: post.score + post.comment_count, reverse=True)
-    contents = list(fetch_content(filtered_posts[:50]))
+    rss, other = partition(lambda p: p.score < 0, filtered_posts)
+    other.sort(key=lambda post: post.score + post.comment_count, reverse=True)
+    # rss.sort(key=lambda post: post.date, reverse=True)
+    # interleave
+    filtered_posts = [x for x in itertools.chain(*itertools.zip_longest(rss, other)) if x is not None]
+    contents = list(fetch_content(filtered_posts[:max_posts]))
     filtered_contents = list(filter(filter_content, contents))
     coeff = 1/(filters.max_filter_score + filters.max_adblock_score)
     pred = lambda content: 100 * approx_distance(2*content.density, (1-coeff*content.filter_score)) + content.post.score + content.post.comment_count

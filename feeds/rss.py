@@ -12,13 +12,15 @@ def parse_feed(content):
         kwargs = dict()
         kwargs['title'] = 'default'
         kwargs['link'] = 'default'
-        kwargs['score'] = 20
+        kwargs['score'] = -1
         kwargs['user'] = 'default'
         kwargs['date'] = datetime.now()
         kwargs['comments'] = 'default'
-        kwargs['comment_count'] = 20
+        kwargs['comment_count'] = -1
         kwargs['source'] = 'default'
         kwargs |= entry
+        # kwargs['content'] = ''
+        # kwargs['summary'] = ''
         yield Post(**kwargs)
 
 def get_feed():
