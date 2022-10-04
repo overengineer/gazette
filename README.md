@@ -17,10 +17,11 @@ Gathers posts from content feeds, filters, formats, delivers to you.
 - [ ] Summarization
 - [ ] Other feeds
   - [ ] Subreddits
-  - [ ] RSS Feeds
+  - [x] RSS Feeds
   - [ ] Slashdot.org
   - [ ] Indiehackers.com?
   - [ ] Dev.to?
+  - [ ] Youtube?
 - [x] Deduplication
 - [x] Better filters
 - [x] Better sorting
